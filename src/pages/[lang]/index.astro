@@ -1,5 +1,6 @@
 ---
 import { Image } from "astro:assets";
+import compressedModelUrl from "../../assets/compressed-model.glb?url";
 import Heroimg from "../../assets/Heroimg.jpeg";
 import Quiz from "../../components/Quiz.astro";
 import { languages } from "../../i18n/ui";
@@ -57,11 +58,7 @@ const t = useTranslations(lang as "en" | "ro" | "es");
 
         <div class="bottom-cta-wrapper reveal">
             <a href={`/${lang}/about/`} class="hover-scale inline-block-transform">
-                <video autoplay loop muted playsinline width="150" height="150" class="process-gif" aria-label="Scale Automata Interactive Process">
-                    <source src="/Logogif.webm" type="video/webm">
-                    <source src="/Logogif.mp4" type="video/mp4">
-                    Your browser does not support the video tag.
-                </video>
+                <model-viewer src={compressedModelUrl} alt="Scale Automata 3D Logo" auto-rotate camera-controls disable-zoom style="width: 150px; height: 150px; --poster-color: transparent;"></model-viewer>
             </a>
         </div>
 

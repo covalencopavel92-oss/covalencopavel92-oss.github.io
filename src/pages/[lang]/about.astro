@@ -1,6 +1,7 @@
 ---
 import { Image } from "astro:assets";
 import AboutUsIm from "../../assets/AboutUsIm.jpeg";
+import compressedModelUrl from "../../assets/compressed-model.glb?url";
 import { languages } from "../../i18n/ui";
 import { useTranslations } from "../../i18n/utils";
 import Layout from "../../layouts/Layout.astro";
@@ -26,6 +27,10 @@ const t = useTranslations(lang as keyof typeof languages);
         <p>We are a forward-thinking digital agency committed to helping businesses thrive in the modern online landscape. Our dedicated team specializes in comprehensive SEO, stunning web design, and data-driven marketing strategies.</p>
         <p>From personalized consulting to fully integrated growth roadmaps, we partner with you at every step of your digital journey. Our goal is to empower your brand with the tools and insights necessary to reach a wider audience and achieve measurable success.</p>
         <p>At Scale Automata, we believe in the power of innovation, transparency, and collaboration. Join us as we build the digital experiences of tomorrow, today.</p>
+    </div>
+
+    <div class="reveal" style="display: flex; justify-content: center; margin: 2rem 0;">
+        <model-viewer src={compressedModelUrl} alt="Scale Automata 3D Logo" auto-rotate camera-controls disable-zoom style="width: 300px; height: 300px; --poster-color: transparent;"></model-viewer>
     </div>
 </Layout>
 
