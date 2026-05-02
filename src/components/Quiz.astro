@@ -1,6 +1,16 @@
 <div class="quiz-container reveal" id="quizApp">
     <h3>Digital Needs Assessment</h3>
     <p>Answer 3 quick questions to get a personalized service recommendation.</p>
+
+    <div class="quiz-progress-wrapper">
+        <div style="font-size: 0.9rem; margin-bottom: 0.5rem; color: var(--text-light); text-align: left;" aria-live="polite">
+            Question <span id="quizCurrentNum">1</span> of <span id="quizTotalNum">3</span>
+        </div>
+        <div class="quiz-progress-bar" id="quizProgressBar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" aria-label="Assessment Progress">
+            <div class="quiz-progress-fill" id="quizProgressFill" style="width: 0%;"></div>
+        </div>
+    </div>
+
     <div id="quizQuestion" aria-live="polite" role="status" style="font-size: 1.4rem; font-weight: 600; margin-bottom: 2rem; min-height: 80px;"></div>
     <div class="quiz-options" id="quizOptions"></div>
 </div>
@@ -55,7 +65,19 @@
             const qData = quizData[currentQuizQuestion];
             const questionEl = document.getElementById('quizQuestion');
             const optionsEl = document.getElementById('quizOptions');
+            const progressFill = document.getElementById('quizProgressFill');
+            const progressBar = document.getElementById('quizProgressBar');
+            const currentNumEl = document.getElementById('quizCurrentNum');
+            const totalNumEl = document.getElementById('quizTotalNum');
+
             if (!questionEl || !optionsEl) return;
+
+            // Update Progress
+            const progressPercent = Math.round((currentQuizQuestion / quizData.length) * 100);
+            if (progressFill) progressFill.style.width = `${progressPercent}%`;
+            if (progressBar) progressBar.setAttribute('aria-valuenow', progressPercent.toString());
+            if (currentNumEl) currentNumEl.innerText = (currentQuizQuestion + 1).toString();
+            if (totalNumEl) totalNumEl.innerText = quizData.length.toString();
 
             questionEl.innerText = qData.question;
             optionsEl.replaceChildren();
