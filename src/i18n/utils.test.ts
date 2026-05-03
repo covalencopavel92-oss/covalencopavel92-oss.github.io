@@ -1,7 +1,22 @@
 import assert from "node:assert/strict";
 import { after, before, describe, it } from "node:test";
-import { ui } from "./ui";
-import { getLangFromUrl, useTranslations } from "./utils";
+import { languages, ui } from "./ui.ts";
+import { getLangFromUrl, getStaticPaths, useTranslations } from "./utils.ts";
+
+describe("getStaticPaths", () => {
+	it("should return an array of params for all supported languages", () => {
+		const paths = getStaticPaths();
+		const expectedLangs = Object.keys(languages);
+
+		assert.equal(paths.length, expectedLangs.length);
+		for (const lang of expectedLangs) {
+			assert.ok(
+				paths.find((p) => p.params.lang === lang),
+				`Missing path for language: ${lang}`,
+			);
+		}
+	});
+});
 
 describe("getLangFromUrl", () => {
 	it("should extract a valid language from the root path", () => {

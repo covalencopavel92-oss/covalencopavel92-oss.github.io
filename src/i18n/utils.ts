@@ -1,4 +1,8 @@
-import { defaultLang, type UIKeys, ui } from "./ui";
+import { defaultLang, languages, type UIKeys, ui } from "./ui.ts";
+
+export function getStaticPaths() {
+	return Object.keys(languages).map((lang) => ({ params: { lang } }));
+}
 
 export function getLangFromUrl(url: URL) {
 	// ⚡ Bolt Optimization: Replace slow split('/') with fast indexOf/substring

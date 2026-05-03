@@ -1,12 +1,11 @@
 ---
 import { languages } from "../../../i18n/ui";
-import { useTranslations } from "../../../i18n/utils";
+import { getStaticPaths, useTranslations } from "../../../i18n/utils";
+
 // Note the extra '../' in the import paths because we are one folder deeper now!
 import Layout from "../../../layouts/Layout.astro";
 
-export function getStaticPaths() {
-	return Object.keys(languages).map((lang) => ({ params: { lang } }));
-}
+export { getStaticPaths };
 
 const { lang } = Astro.params;
 const t = useTranslations(lang as keyof typeof languages);
