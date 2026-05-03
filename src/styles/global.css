@@ -1448,7 +1448,7 @@ input:checked + .slider svg.fa-moon {
 	.sidebar:not(:hover):not(:has(#sidebar-toggle:checked)) .theme-switch {
 		display: flex;
 		justify-content: center;
-		width: 100%;
+		width: 50px;
 	}
 	.sidebar:hover .theme-switch,
 	.sidebar:has(#sidebar-toggle:checked) .theme-switch {
