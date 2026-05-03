@@ -1,0 +1,294 @@
+---
+interface Props {
+	text: string;
+}
+
+const { text } = Astro.props;
+---
+<div class="three-text-container" data-text={text}>
+  <!-- Three.js canvas will be injected here -->
+</div>
+
+<script>
+  import * as THREE from 'three';
+  import { FontLoader } from 'three/examples/jsm/loaders/FontLoader.js';
+  import { TextGeometry } from 'three/examples/jsm/geometries/TextGeometry.js';
+
+  class ThreeText {
+    constructor(container) {
+      this.container = container;
+      this.text = container.dataset.text || "";
+      this.words = this.text.split(' ');
+
+      this.init();
+    }
+
+    async init() {
+      // Scene
+      this.scene = new THREE.Scene();
+
+      // Camera
+      // Responsive sizing
+      const width = this.container.clientWidth;
+      const height = this.container.clientHeight || window.innerHeight * 0.4;
+
+      const aspect = width / height;
+      this.camera = new THREE.PerspectiveCamera(45, aspect, 0.1, 1000);
+
+      // Renderer
+      this.renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+      this.renderer.setSize(width, height);
+      this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+      this.container.appendChild(this.renderer.domElement);
+
+      // Group to hold all words
+      this.textGroup = new THREE.Group();
+      this.scene.add(this.textGroup);
+
+      this.wordMeshes = [];
+
+      // Materials to mimic neon blue and layered depth
+      // MeshBasicMaterial is used to avoid lighting calculations (lowest GPU usage)
+      this.frontMaterial = new THREE.MeshBasicMaterial({ color: 0x00f6ff });
+      // Side material for the 3D depth, slightly darker/cyan
+      this.sideMaterial = new THREE.MeshBasicMaterial({ color: 0x007a80 });
+
+      const materials = [
+        this.frontMaterial, // front
+        this.sideMaterial // side
+      ];
+
+      const loader = new FontLoader();
+      loader.load('/fonts/RussoOne_Regular.json', (font) => {
+        let currentX = 0;
+        const wordSpacing = 5;
+        const lineSpacing = 16;
+        let currentY = 0;
+
+        // Base max width in 3D units based on aspect ratio
+        const isMobile = window.innerWidth < 768;
+        const maxWidth = isMobile ? 60 : 120;
+
+        const wordsGroup = new THREE.Group();
+
+        // First pass: generate geometries and group into lines
+        const lines = [];
+        let currentLine = { words: [], width: 0 };
+
+        for (let i = 0; i < this.words.length; i++) {
+          let wordStr = this.words[i];
+          const isLineBreak = wordStr.endsWith('.');
+
+          const geometry = new TextGeometry(wordStr, {
+            font: font,
+            size: 10,
+            depth: 2,
+            curveSegments: 2,
+            bevelEnabled: false
+          });
+
+          geometry.computeBoundingBox();
+          const bbox = geometry.boundingBox;
+          const wordWidth = bbox.max.x - bbox.min.x;
+
+          // Wrap logic
+          if (currentLine.width + wordWidth > maxWidth && currentLine.words.length > 0) {
+            lines.push(currentLine);
+            currentLine = { words: [], width: 0 };
+          }
+
+          currentLine.words.push({ wordStr, geometry, width: wordWidth, isLineBreak, originalIndex: i });
+          currentLine.width += wordWidth + wordSpacing;
+
+          if (isLineBreak) {
+            currentLine.width -= wordSpacing; // remove trailing space
+            lines.push(currentLine);
+            currentLine = { words: [], width: 0 };
+          }
+        }
+        if (currentLine.words.length > 0) {
+          currentLine.width -= wordSpacing;
+          lines.push(currentLine);
+        }
+
+        // Second pass: position words, centering each line
+        for (let i = 0; i < lines.length; i++) {
+            const line = lines[i];
+            let startX = -(line.width / 2); // Center alignment offset
+
+            for (let j = 0; j < line.words.length; j++) {
+                const item = line.words[j];
+                const mesh = new THREE.Mesh(item.geometry, materials);
+                mesh.position.set(startX, currentY, 0);
+                wordsGroup.add(mesh);
+
+                this.wordMeshes.push({
+                    mesh: mesh,
+                    baseY: currentY,
+                    delay: item.originalIndex * 0.2
+                });
+
+                startX += item.width + wordSpacing;
+            }
+            currentY -= lineSpacing;
+        }
+
+        // Center the whole group vertically and ensure origin alignment
+        const box = new THREE.Box3().setFromObject(wordsGroup);
+        const center = box.getCenter(new THREE.Vector3());
+        const size = box.getSize(new THREE.Vector3());
+
+        wordsGroup.position.x = -center.x; // Should be near 0 due to line centering
+        wordsGroup.position.y = -center.y; // Center vertically
+
+        // Account for the wave animation height (+/- 2) and rotation margins
+        const fov = this.camera.fov * (Math.PI / 180);
+        const margin = 1.35; // increased margin to prevent clipping during wave/rotation
+        const requiredHeight = size.y + 10; // extra padding for wave
+
+        const distZ = Math.max(requiredHeight / (2 * Math.tan(fov / 2)), size.x / (2 * Math.tan(fov / 2) * this.camera.aspect));
+
+        this.camera.position.z = distZ * margin + (size.z / 2);
+
+        this.textGroup.add(wordsGroup);
+      });
+
+      // Mouse tracking for rotation
+      this.mouse = { x: 0, y: 0, targetX: 0, targetY: 0 };
+      this.isHovering = false;
+
+      this.onMouseMove = (e) => {
+        const rect = this.container.getBoundingClientRect();
+        // Check if hovering
+        if (e.clientX >= rect.left && e.clientX <= rect.right &&
+            e.clientY >= rect.top && e.clientY <= rect.bottom) {
+          this.isHovering = true;
+          // Normalize mouse coordinates from -1 to +1
+          this.mouse.targetX = ((e.clientX - rect.left) / rect.width) * 2 - 1;
+          this.mouse.targetY = -((e.clientY - rect.top) / rect.height) * 2 + 1;
+        } else {
+          this.isHovering = false;
+          this.mouse.targetX = 0;
+          this.mouse.targetY = 0;
+        }
+      };
+
+      window.addEventListener('mousemove', this.onMouseMove);
+
+      // Resize handling
+      this.onResize = () => {
+        if (!this.container || !this.camera) return;
+        const width = this.container.clientWidth;
+        const height = this.container.clientHeight || window.innerHeight * 0.4;
+
+        this.renderer.setSize(width, height);
+        this.camera.aspect = width / height;
+
+        // Re-evaluate fit
+        if (this.textGroup && this.textGroup.children.length > 0) {
+            const box = new THREE.Box3().setFromObject(this.textGroup);
+            const size = box.getSize(new THREE.Vector3());
+            const fov = this.camera.fov * (Math.PI / 180);
+            const margin = 1.35;
+            const requiredHeight = size.y + 10;
+            const distZ = Math.max(requiredHeight / (2 * Math.tan(fov / 2)), size.x / (2 * Math.tan(fov / 2) * this.camera.aspect));
+            this.camera.position.z = distZ * margin + (size.z / 2);
+        }
+
+        this.camera.updateProjectionMatrix();
+      };
+      window.addEventListener('resize', this.onResize);
+
+      this.clock = new THREE.Clock();
+
+      // Animation loop
+      this.animate = () => {
+        this.animationId = requestAnimationFrame(this.animate);
+
+        const time = this.clock.getElapsedTime();
+
+        // 1. Wave Animation
+        for (let i = 0; i < this.wordMeshes.length; i++) {
+          const item = this.wordMeshes[i];
+          // Simple sine wave
+          const waveY = Math.sin(time * 3 - item.delay) * 2;
+          item.mesh.position.y = item.baseY + waveY;
+        }
+
+        // 2. Pointer Rotation Event
+        // Smoothly interpolate current mouse to target mouse
+        this.mouse.x += (this.mouse.targetX - this.mouse.x) * 0.1;
+        this.mouse.y += (this.mouse.targetY - this.mouse.y) * 0.1;
+
+        // Apply rotation (max rotation of 15 degrees ~ 0.26 rad)
+        const maxRotation = 15 * (Math.PI / 180);
+        if (this.textGroup) {
+          this.textGroup.rotation.y = this.mouse.x * maxRotation;
+          this.textGroup.rotation.x = -this.mouse.y * maxRotation;
+        }
+
+        this.renderer.render(this.scene, this.camera);
+      };
+
+      this.animate();
+    }
+
+    destroy() {
+      if (this.animationId) cancelAnimationFrame(this.animationId);
+      window.removeEventListener('resize', this.onResize);
+      window.removeEventListener('mousemove', this.onMouseMove);
+
+      if (this.renderer) {
+        this.renderer.dispose();
+        this.container.removeChild(this.renderer.domElement);
+      }
+      // Note: In a full cleanup we'd dispose geometries and materials,
+      // but Astro's page transitions handle element removal.
+    }
+  }
+
+  // Handle initialization and cleanup for Astro View Transitions
+  function initThreeText() {
+    const containers = document.querySelectorAll('.three-text-container');
+    containers.forEach(container => {
+      if (!container.threeInstance) {
+        container.threeInstance = new ThreeText(container);
+      }
+    });
+  }
+
+  function cleanupThreeText() {
+    const containers = document.querySelectorAll('.three-text-container');
+    containers.forEach(container => {
+      if (container.threeInstance) {
+        container.threeInstance.destroy();
+        container.threeInstance = null;
+      }
+    });
+  }
+
+  // Initialize on initial page load
+  document.addEventListener('astro:page-load', initThreeText);
+
+  // Cleanup before swapping to avoid memory leaks
+  document.addEventListener('astro:before-swap', cleanupThreeText);
+
+</script>
+
+<style>
+  .three-text-container {
+    width: 100%;
+    height: clamp(150px, 30vh, 250px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+  }
+
+  /* Make sure canvas stays within container */
+  .three-text-container canvas {
+    max-width: 100%;
+    height: auto;
+    outline: none;
+  }
+</style>
