@@ -3,7 +3,7 @@ import { defaultLang, type UIKeys, ui } from "./ui";
 export function getLangFromUrl(url: URL) {
 	// ⚡ Bolt Optimization: Replace slow split('/') with fast indexOf/substring
 	// Avoids array allocation and multiple string copies for paths like /en/about
-	const start = url.pathname.startsWith("/") ? 1 : 0;
+	const start = 1;
 	const end = url.pathname.indexOf("/", start);
 	const lang =
 		end === -1
