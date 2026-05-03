@@ -222,7 +222,7 @@ export const ui = {
 		"footer.privacy": "Politica de Confidențialitate",
 		"footer.terms": "Termeni și Condiții",
 		"index.hero.title":
-			"Îmbunătățește-ți strategia. Clasează-te mai sus. Obține mai mulți clienți.",
+			"Imbunatateste-ti strategia. Claseaza-te mai sus. Obtine mai multi clienti.",
 		"index.hero.subtitle":
 			"Creăm strategii personalizate menite să-ți ridice brandul și să aducă rezultate măsurabile. De la design web inovator la campanii digitale complete, suntem dedicați atingerii obiectivelor tale.",
 		"index.hero.desc1":
@@ -386,7 +386,7 @@ export const ui = {
 		"footer.privacy": "Política de Privacidad",
 		"footer.terms": "Términos y Condiciones",
 		"index.hero.title":
-			"Mejora tu estrategia. Posiciónate más alto. Consigue más clientes.",
+			"Mejora tu estrategia. Posicionate mas alto. Consigue mas clientes.",
 		"index.hero.subtitle":
 			"Creamos estrategias personalizadas diseñadas para elevar tu marca y generar resultados medibles. Desde un diseño web innovador hasta campañas digitales integrales, nos dedicamos a alcanzar tus objetivos.",
 		"index.hero.desc1":

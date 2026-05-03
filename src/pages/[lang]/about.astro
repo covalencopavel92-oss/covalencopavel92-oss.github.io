@@ -2,7 +2,7 @@
 import { Image } from "astro:assets";
 import AboutUsIm from "../../assets/AboutUsIm.jpeg";
 import compressedModelUrl from "../../assets/compressed-model.glb?url";
-import { languages } from "../../i18n/ui";
+import type { languages } from "../../i18n/ui";
 import { getStaticPaths, useTranslations } from "../../i18n/utils";
 
 import Layout from "../../layouts/Layout.astro";
@@ -29,7 +29,7 @@ const t = useTranslations(lang as keyof typeof languages);
     </div>
 
     <div class="reveal" style="display: flex; justify-content: center; margin: 2rem 0;">
-        <model-viewer src={compressedModelUrl} alt="Scale Automata 3D Logo" auto-rotate camera-controls disable-zoom style="width: 300px; height: 300px; --poster-color: transparent;"></model-viewer>
+        <model-viewer src={compressedModelUrl} alt="Scale Automata 3D Logo" auto-rotate camera-controls disable-zoom style="width: 200px; height: 200px; --poster-color: transparent;"></model-viewer>
     </div>
 </Layout>
 

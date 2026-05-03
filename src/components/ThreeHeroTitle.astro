@@ -61,13 +61,13 @@ const { text } = Astro.props;
       const loader = new FontLoader();
       loader.load('/fonts/RussoOne_Regular.json', (font) => {
         let currentX = 0;
-        const wordSpacing = 5;
-        const lineSpacing = 16;
+        const wordSpacing = 8;
+        const lineSpacing = 28;
         let currentY = 0;
 
         // Base max width in 3D units based on aspect ratio
         const isMobile = window.innerWidth < 768;
-        const maxWidth = isMobile ? 60 : 120;
+        const maxWidth = isMobile ? 120 : 250;
 
         const wordsGroup = new THREE.Group();
 
@@ -81,7 +81,7 @@ const { text } = Astro.props;
 
           const geometry = new TextGeometry(wordStr, {
             font: font,
-            size: 10,
+            size: 18,
             depth: 2,
             curveSegments: 2,
             bevelEnabled: false
@@ -278,7 +278,7 @@ const { text } = Astro.props;
 <style>
   .three-text-container {
     width: 100%;
-    height: clamp(150px, 30vh, 250px);
+    height: clamp(200px, 40vh, 400px);
     display: flex;
     justify-content: center;
     align-items: center;

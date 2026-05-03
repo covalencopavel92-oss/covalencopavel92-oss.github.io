@@ -41,6 +41,12 @@ const metaDesc = description || t("home.desc").substring(0, 160);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- Security Headers for Static Sites -->
+    <script>
+        // Expose bundled THREE.js to window for Vanta.js
+        import * as THREE from 'three';
+        window.THREE = THREE;
+    </script>
+
     <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https://images.unsplash.com blob:; connect-src 'self' https://cdnjs.cloudflare.com; worker-src 'self' blob:; base-uri 'self'; form-action 'self';">
     <title>{title} | Scale Automata</title>
     
@@ -221,11 +227,7 @@ const metaDesc = description || t("home.desc").substring(0, 160);
         try {
             // ⚡ Bolt Optimization: Use Promise.all to trigger both script requests simultaneously.
             // Combined with script.async = false in loadScript, this eliminates the network waterfall
-            // where Vanta waits for Three.js to finish downloading before it can even begin its own request.
-            await Promise.all([
-                loadScript("https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"),
-                loadScript("https://cdnjs.cloudflare.com/ajax/libs/vanta/0.5.24/vanta.birds.min.js")
-            ]);
+            await loadScript("https://cdnjs.cloudflare.com/ajax/libs/vanta/0.5.24/vanta.birds.min.js");
             window.vantaScriptsLoaded = true;
             startVanta();
         } catch (e) {
