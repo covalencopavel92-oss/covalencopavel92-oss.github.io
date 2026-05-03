@@ -19,10 +19,13 @@ importers:
         version: 5.2.7
       '@google/model-viewer':
         specifier: ^4.2.0
-        version: 4.2.0(three@0.182.0)
+        version: 4.2.0(three@0.184.0)
       astro:
         specifier: ^5.18.1
         version: 5.18.1(@types/node@25.6.0)(rollup@4.60.2)(tsx@4.21.0)(typescript@5.9.3)
+      three:
+        specifier: ^0.184.0
+        version: 0.184.0
       vanilla-tilt:
         specifier: ^1.8.1
         version: 1.8.1
@@ -2052,8 +2055,8 @@ packages:
   text-hex@1.0.0:
     resolution: {integrity: sha512-uuVGNWzgJ4yhRaNSiubPY7OjISw4sw4E5Uv0wbjp+OzcbmVU/rsT8ujgcXJhn9ypzsgr5vlzpPqP+MBBKcGvbg==}
 
-  three@0.182.0:
-    resolution: {integrity: sha512-GbHabT+Irv+ihI1/f5kIIsZ+Ef9Sl5A1Y7imvS5RQjWgtTPfPnZ43JmlYI7NtCRDK9zir20lQpfg8/9Yd02OvQ==}
+  three@0.184.0:
+    resolution: {integrity: sha512-wtTRjG92pM5eUg/KuUnHsqSAlPM296brTOcLgMRqEeylYTh/CdtvKUvCyyCQTzFuStieWxvZb8mVTMvdPyUpxg==}
 
   tiny-inflate@1.0.3:
     resolution: {integrity: sha512-pkY1fj1cKHb2seWDy0B16HeWyczlJA9/WW3u3c4z/NiWDsO3DOU5D7nhTLE9CF0yXv/QZFY7sEJmj24dK+Rrqw==}
@@ -2669,11 +2672,11 @@ snapshots:
       ndarray-lanczos: 0.3.0
       ndarray-pixels: 5.0.1
 
-  '@google/model-viewer@4.2.0(three@0.182.0)':
+  '@google/model-viewer@4.2.0(three@0.184.0)':
     dependencies:
-      '@monogrid/gainmap-js': 3.4.0(three@0.182.0)
+      '@monogrid/gainmap-js': 3.4.0(three@0.184.0)
       lit: 3.3.2
-      three: 0.182.0
+      three: 0.184.0
 
   '@img/colour@1.1.0': {}
 
@@ -2788,10 +2791,10 @@ snapshots:
     dependencies:
       '@lit-labs/ssr-dom-shim': 1.5.1
 
-  '@monogrid/gainmap-js@3.4.0(three@0.182.0)':
+  '@monogrid/gainmap-js@3.4.0(three@0.184.0)':
     dependencies:
       promise-worker-transferable: 1.0.4
-      three: 0.182.0
+      three: 0.184.0
 
   '@oslojs/encoding@1.1.0': {}
 
@@ -4609,7 +4612,7 @@ snapshots:
 
   text-hex@1.0.0: {}
 
-  three@0.182.0: {}
+  three@0.184.0: {}
 
   tiny-inflate@1.0.3: {}
 

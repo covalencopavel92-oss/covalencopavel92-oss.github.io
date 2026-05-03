@@ -3,7 +3,8 @@ import { Image } from "astro:assets";
 import compressedModelUrl from "../../assets/compressed-model.glb?url";
 import Heroimg from "../../assets/Heroimg.jpeg";
 import Quiz from "../../components/Quiz.astro";
-import { useTranslations, getStaticPaths } from "../../i18n/utils";
+import ThreeHeroTitle from "../../components/ThreeHeroTitle.astro";
+import { getStaticPaths, useTranslations } from "../../i18n/utils";
 import Layout from "../../layouts/Layout.astro";
 
 export { getStaticPaths };
@@ -16,18 +17,8 @@ const t = useTranslations(lang as "en" | "ro" | "es");
         
         <div class="hero-section hero-section-wrapper">
             <div class="reveal">            
-                <h1 class="hero-title title-overflow" style="padding-left: 20px; padding-right: 20px;" data-z data-z-layers="5" data-z-depth="15px" data-z-event="pointer" data-z-eventrotation="15deg">
-                    <span class="pan-wrapper">
 
-                        {t('index.hero.title').split(' ').map((word, index) => (
-                            <>
-                            <span class="wave-word" style={`--d:${0.2 + index * 0.2}s`}>{word} </span>
-                            {word.endsWith('.') && <br/>}
-                            </>
-                        ))}
-
-                    </span>
-                </h1>
+                <ThreeHeroTitle text={t('index.hero.title')} />
                 
                 <h2 class="hero-subtitle">
                     {t('index.hero.subtitle')}
@@ -62,68 +53,7 @@ const t = useTranslations(lang as "en" | "ro" | "es");
     </section>
 </Layout>
 
-<script is:inline>
-    // Initialize ztext on page load for view transitions
-    if (!window.ztextInitListenerAdded) {
-        document.addEventListener('astro:page-load', () => {
-            if (!window.Ztextify && !document.querySelector('script[src="/ztext.min.js"]')) {
-                const script = document.createElement('script');
-                script.src = "/ztext.min.js";
-                script.async = true;
-                script.onload = () => {
-                   if (document.querySelector('.hero-title')) {
-                       new window.Ztextify(".hero-title", {
-                           depth: "15px",
-                           layers: 5,
-                           fade: false,
-                           direction: "both",
-                           event: "pointer",
-                           eventRotation: "15deg"
-                       });
-                   }
-                };
-                document.body.appendChild(script);
-            } else if (window.Ztextify && document.querySelector('.hero-title')) {
-                // Re-initialize if already loaded. Use the same options as data attributes.
-                // Ztextify requires a CSS selector string, not an element.
-                // Reset innerHTML before applying to prevent compounding layers
-                const el = document.querySelector('.hero-title');
-                // The ztext.min.js alters the DOM inner HTML heavily.
-                // We don't want to re-wrap an already wrapped element
-                if (!el.querySelector('.z-text')) {
-                    new window.Ztextify(".hero-title", {
-                        depth: "15px",
-                        layers: 5,
-                        fade: false,
-                        direction: "both",
-                        event: "pointer",
-                        eventRotation: "15deg"
-                    });
-                }
-            }
-        });
-        window.ztextInitListenerAdded = true;
-    }
-</script>
-
 <style>
-    /* 3D typography style for ztext */
-    .hero-title .z-text {
-        transform: rotateX(5deg) rotateY(-5deg);
-        transform-origin: center center;
-        transition: transform 0.1s;
-    }
-    .hero-title {
-        text-align: center;
-        margin-left: auto;
-        margin-right: auto;
-    }
-    .hero-title .z-layer:not(:first-child) {
-        /* Add a subtle shadow/darken effect to deeper layers */
-        color: var(--neon-blue);
-        filter: brightness(0.5);
-    }
-
     .hero-image-wrapper {
         width: 100%;
         display: flex;
