@@ -59,7 +59,13 @@ const metaDesc = description || t("home.desc").substring(0, 160);
     <link rel="preload" href={fontRusso} as="font" type="font/woff2" crossorigin="anonymous" />
 
     <!-- Google model-viewer script -->
-    <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.4.0/model-viewer.min.js"></script>
+    <script>
+        document.addEventListener("astro:page-load", async () => {
+            if (!customElements.get("model-viewer")) {
+                await import("@google/model-viewer/dist/model-viewer.min.js");
+            }
+        });
+    </script>
 
     <ClientRouter />
 
