@@ -1,9 +1,8 @@
 ---
 import { Image } from "astro:assets";
-import compressedModelUrl from "../../assets/compressed-model.glb?url";
 import Heroimg from "../../assets/Heroimg.jpeg";
 import Quiz from "../../components/Quiz.astro";
-import { useTranslations, getStaticPaths } from "../../i18n/utils";
+import { getStaticPaths, useTranslations } from "../../i18n/utils";
 import Layout from "../../layouts/Layout.astro";
 
 export { getStaticPaths };
@@ -55,7 +54,7 @@ const t = useTranslations(lang as "en" | "ro" | "es");
 
         <div class="bottom-cta-wrapper reveal">
             <a href={`/${lang}/about/`} class="hover-scale inline-block-transform">
-                <model-viewer src={compressedModelUrl} alt="Scale Automata 3D Logo" auto-rotate camera-controls disable-zoom style="width: 150px; height: 150px; --poster-color: transparent;"></model-viewer>
+                <!-- Removed 3D Logo model-viewer -->
             </a>
         </div>
 
