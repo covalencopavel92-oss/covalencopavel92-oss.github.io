@@ -44,3 +44,6 @@
 ## 2026-05-18 - [Optimize Network Dependency Tree via Preconnect]
 **Learning:** When client-side scripts (like Vanta.js from cdnjs) or images (like those from Unsplash) are loaded dynamically or via CSS background images, the browser cannot begin downloading them until the DOM/CSS is fully parsed or the delaying script executes. This delays DNS, TCP, and TLS handshakes, further slowing down load times.
 **Action:** Always add `<link rel="preconnect">` tags for critical external domains (like `cdnjs.cloudflare.com` and `images.unsplash.com`) in the `<head>` of the application. This ensures the browser establishes the connection early, reducing the overall latency when the actual resource is requested.
+## 2024-05-24 - [Optimize DOM Insertions with DocumentFragment]
+**Learning:** Directly appending multiple dynamically created DOM elements inside a loop causes multiple reflows and repaints in the browser rendering engine, which can negatively impact performance and cause layout thrashing.
+**Action:** When creating and appending multiple elements in vanilla JavaScript, always batch the operations by appending them to a `DocumentFragment` first. After the loop, append the entire fragment to the live DOM in a single operation to minimize reflow overhead.
