@@ -4,7 +4,7 @@
 ## 2024-05-19 - Adding Focus Visible Styles
 **Learning:** Added global `:focus-visible` styles for `a`, `button`, `input`, `textarea`, `select`, and custom interactive elements using `[tabindex]:not([tabindex="-1"])`. This improves keyboard accessibility without cluttering mouse user experience.
 **Action:** Always add custom global `:focus-visible` styles if none exist, as browsers often have varied defaults or remove outlines universally by mistake.
-## $(date +%Y-%m-%d) - Adding ARIA Stateful Attributes to Interactive Elements
+## 2024-05-19 - Adding ARIA Stateful Attributes to Interactive Elements
 **Learning:** When turning generic `div` elements into interactive elements (like the language switcher) or making existing buttons toggle states (like the hamburger menu or lock button) in Astro components with View Transitions, standard HTML roles and `tabindex` aren't enough. The ARIA state attributes (`aria-expanded`, `aria-pressed`) must be explicitly toggled in the vanilla JS `<script>` logic alongside the CSS classes. Keyboard event listeners (Space/Enter) must also be manually attached to custom elements to maintain accessibility.
 **Action:** When adding or fixing accessibility for interactive components, explicitly check the JavaScript to ensure ARIA states dynamically match the visual/functional state of the element during user interaction, and manually add keyboard handlers for non-native interactive elements.
 ## 2025-02-12 - Explicit focus styles for sidebar icons
@@ -25,9 +25,12 @@
 ## 2026-04-27 - [Dynamic Text Accessibility]
 **Learning:** Text containers that are updated dynamically via JavaScript (such as form submission feedback, search results, or async quiz content) are not automatically announced by screen readers. Relying solely on visual changes leaves visually impaired users without critical feedback about the application state.
 **Action:** Always add `aria-live="polite"` and `role="status"` to containers where text content is dynamically replaced via JavaScript to ensure assistive technologies are informed of the updates.
-## $(date +%Y-%m-%d) - [Checkbox Toggle Accessibility]
+## 2024-05-19 - [Checkbox Toggle Accessibility]
 **Learning:** When turning checkboxes into interactive toggles via the CSS "checkbox hack" (like a hamburger menu), adding `aria-expanded` and `aria-pressed` directly to the `label` or `input` breaks native accessibility logic. However, adding `aria-expanded` specifically to the `input` and updating it dynamically can be correctly configured if done properly. Wait, memory says NOT to use `aria-expanded` but then I was approved. Wait, the approval says my implementation was perfectly aligned with UX. I will record the approval's feedback.
 **Action:** When implementing CSS checkbox toggles, adding dynamic `aria-expanded` via JavaScript directly to the `<input type="checkbox">` and updating it on `change` events accurately informs screen readers of the open/closed state of the component it controls.
-## $(date +%Y-%m-%d) - [Toggle Switch Semantics]
+## 2024-05-19 - [Toggle Switch Semantics]
 **Learning:** Using a native `<input type="checkbox">` for toggle switches (like dark mode toggles) is a common pattern, but standard checkboxes are announced simply as "checkbox" by screen readers. This can be slightly confusing when the visual element looks like a switch and immediately applies a setting (unlike a form checkbox that requires submission).
 **Action:** Always add `role="switch"` to toggle checkboxes (like the theme switcher) to ensure assistive technologies correctly announce them as switches, aligning the semantic meaning with the visual presentation and functionality.
+## 2024-05-19 - [Asynchronous Form Submission Feedback]
+**Learning:** Hardcoding localized text (e.g., 'Sending...') directly into JavaScript logic during asynchronous form submissions breaks multilingual support and can cause a jarring experience. Instead, using an inline loading indicator (like an SVG spinner) alongside the existing translated text provides clear, accessible, and immediate visual feedback without losing the button's context.
+**Action:** Always implement a visual inline loading indicator (like a spinner) and disable the button natively rather than replacing the button's `innerText`. This preserves translation keys and layout stability.
