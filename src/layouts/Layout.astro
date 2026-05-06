@@ -176,21 +176,34 @@ const metaDesc = description || t("home.desc").substring(0, 160);
         themeObserver.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
     };
 
+    // ⚡ Bolt Optimization: Reuse IntersectionObserver to prevent memory leaks and reduce CPU usage.
+    // Instead of instantiating a new observer on every astro:page-load navigation,
+    // we instantiate it once in module scope and reuse it across navigations.
+    let scrollRevealObserver = null;
+
     const initScrollReveal = () => {
         const reveals = document.querySelectorAll('.reveal');
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if(entry.isIntersecting) {
-                    entry.target.classList.add('active');
-                    // ⚡ Bolt Optimization: Stop observing elements once they are revealed.
-                    // This prevents the IntersectionObserver from wasting CPU cycles evaluating
-                    // intersection state on scroll for elements that have already been animated.
-                    observer.unobserve(entry.target);
-                }
-            });
-        }, { threshold: 0.1 });
 
-        reveals.forEach(reveal => observer.observe(reveal));
+        if (!scrollRevealObserver) {
+            scrollRevealObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if(entry.isIntersecting) {
+                        entry.target.classList.add('active');
+                        // ⚡ Bolt Optimization: Stop observing elements once they are revealed.
+                        // This prevents the IntersectionObserver from wasting CPU cycles evaluating
+                        // intersection state on scroll for elements that have already been animated.
+                        scrollRevealObserver.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.1 });
+        }
+
+        reveals.forEach(reveal => {
+            // Only observe elements that haven't been revealed yet
+            if (!reveal.classList.contains('active')) {
+                scrollRevealObserver.observe(reveal);
+            }
+        });
     };
 
     const loadScript = (src) => {
