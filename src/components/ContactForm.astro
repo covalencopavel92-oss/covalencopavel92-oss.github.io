@@ -28,7 +28,12 @@ const t = useTranslations(lang);
             <textarea class="floating-input" id="message" name="message" required></textarea>
             <label class="floating-label" for="message">{t('contact.message')}</label>
         </div>
-        <button type="submit" class="btn btn-primary" style="width: 100%;">{t('contact.send')}</button>
+        <button type="submit" class="btn btn-primary" style="width: 100%; display: flex; align-items: center; justify-content: center; gap: 0.5rem;">
+            <svg class="btn-spinner" style="display: none; animation: spin 1s linear infinite;" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 12a9 9 0 1 1-6.219-8.56"></path>
+            </svg>
+            <span class="btn-text">{t('contact.send')}</span>
+        </button>
         <div class="form-message" id="formMessage" aria-live="polite" role="status">{t('contact.success')}</div>
     </form>
 </div>
@@ -48,9 +53,9 @@ const t = useTranslations(lang);
             const btn = form.querySelector('button');
             if (!btn) return;
 
-            const originalText = btn.innerText;
+            const spinner = btn.querySelector('.btn-spinner') as HTMLElement;
+            if (spinner) spinner.style.display = 'block';
 
-            btn.innerText = 'Sending...';
             btn.style.opacity = '0.8';
             btn.style.transform = 'scale(0.98)';
             btn.disabled = true;
@@ -60,7 +65,8 @@ const t = useTranslations(lang);
                 const msg = document.getElementById('formMessage');
                 if(msg) msg.style.display = 'block';
                 (form as HTMLFormElement).reset();
-                btn.innerText = originalText;
+
+                if (spinner) spinner.style.display = 'none';
                 btn.style.opacity = '1';
                 btn.style.transform = 'none';
                 btn.disabled = false;
