@@ -31,3 +31,6 @@
 ## $(date +%Y-%m-%d) - [Toggle Switch Semantics]
 **Learning:** Using a native `<input type="checkbox">` for toggle switches (like dark mode toggles) is a common pattern, but standard checkboxes are announced simply as "checkbox" by screen readers. This can be slightly confusing when the visual element looks like a switch and immediately applies a setting (unlike a form checkbox that requires submission).
 **Action:** Always add `role="switch"` to toggle checkboxes (like the theme switcher) to ensure assistive technologies correctly announce them as switches, aligning the semantic meaning with the visual presentation and functionality.
+## 2026-05-07 - Adding Inline Loading Spinner for Async Forms
+**Learning:** Replacing submit button text with 'Sending...' breaks i18n and can cause layout shifts. Additionally, buttons should provide an accessible loading state.
+**Action:** Add an inline SVG spinner directly within the button alongside the text and toggle its visibility using JavaScript, rather than altering the button's `innerText`.
