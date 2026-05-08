@@ -47,3 +47,6 @@
 ## 2024-05-24 - [Optimize DOM Insertions with DocumentFragment]
 **Learning:** Directly appending multiple dynamically created DOM elements inside a loop causes multiple reflows and repaints in the browser rendering engine, which can negatively impact performance and cause layout thrashing.
 **Action:** When creating and appending multiple elements in vanilla JavaScript, always batch the operations by appending them to a `DocumentFragment` first. After the loop, append the entire fragment to the live DOM in a single operation to minimize reflow overhead.
+## 2024-05-25 - [Optimize Observer Memory Usage]
+**Learning:** Re-instantiating `IntersectionObserver` or `MutationObserver` inside lifecycle events (like `astro:page-load`) without proper cleanup causes memory leaks and wastes CPU cycles across View Transitions or SPA navigations.
+**Action:** Always instantiate observers globally (e.g., using a module-scoped variable or `window` singleton) and reuse them instead of creating new instances repeatedly.
