@@ -475,7 +475,8 @@ body {
 	position: relative;
 }
 
-.sidebar:not(:hover):not(:has(#sidebar-toggle:checked)) .search-input {
+.sidebar:not(:hover):not(:has(#sidebar-toggle:checked)) .search-input,
+.sidebar:not(:hover):not(:has(#sidebar-toggle:checked)) .theme-text {
 	/* Absolute positioning removes it from the document flow, ensuring the icon perfectly centers */
 	position: absolute;
 	opacity: 0;
