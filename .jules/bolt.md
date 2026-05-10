@@ -47,3 +47,6 @@
 ## 2024-05-24 - [Optimize DOM Insertions with DocumentFragment]
 **Learning:** Directly appending multiple dynamically created DOM elements inside a loop causes multiple reflows and repaints in the browser rendering engine, which can negatively impact performance and cause layout thrashing.
 **Action:** When creating and appending multiple elements in vanilla JavaScript, always batch the operations by appending them to a `DocumentFragment` first. After the loop, append the entire fragment to the live DOM in a single operation to minimize reflow overhead.
+## 2026-05-18 - [Yield to Main Thread during DOM Parsing]
+**Learning:** Instantiating `DOMParser` and executing `parseFromString` on full HTML documents sequentially inside a fast-path map or loop blocks the main thread, resulting in poor Interaction to Next Paint (INP) and Total Blocking Time (TBT). Even if the promise resolves concurrently, the synchronous parsing of large DOM trees locks up UI responsiveness, causing lag when users are typing (e.g. in a search box).
+**Action:** Always yield to the main thread before parsing heavy HTML strings using a construct like `await new Promise(resolve => 'requestIdleCallback' in window ? requestIdleCallback(resolve) : setTimeout(resolve, 0));`. This breaks up long tasks, allowing the browser to render frames and handle user inputs between parsing cycles.

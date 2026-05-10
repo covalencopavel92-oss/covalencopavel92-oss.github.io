@@ -346,6 +346,12 @@ const navLinks = [
                     const response = await fetch(item.url);
                     if (response.ok) {
                         const html = await response.text();
+
+                        // ⚡ Bolt Optimization: Yield to the main thread before parsing heavy HTML.
+                        // DOMParser on full documents causes long tasks that block UI responsiveness (INP/TBT).
+                        // Yielding ensures the browser can process user typing in the search input without jank.
+                        await new Promise(resolve => 'requestIdleCallback' in window ? requestIdleCallback(resolve) : setTimeout(resolve, 0));
+
                         const doc = parser.parseFromString(html, 'text/html');
 
                         // Extract text from main-content only, to avoid indexing the sidebar itself
