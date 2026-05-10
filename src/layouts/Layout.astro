@@ -161,36 +161,45 @@ const metaDesc = description || t("home.desc").substring(0, 160);
         clearTimeout(window.vantaColorTimer);
         window.vantaColorTimer = setTimeout(changeColors, 15000);
 
-        const themeObserver = new MutationObserver((mutations) => {
-            mutations.forEach((mutation) => {
-                if (mutation.attributeName === 'data-theme' && window.vantaEffect) {
-                    const darkNow = document.documentElement.getAttribute('data-theme') === 'dark';
-                    window.vantaEffect.setOptions({ 
-                        backgroundColor: darkNow ? darkBg : lightBg
-                    });
-                }
+        // ⚡ Bolt Optimization: Use a singleton MutationObserver attached to the window
+        // to prevent memory leaks and redundant observer creation on every astro:page-load
+        if (!window.themeObserver) {
+            window.themeObserver = new MutationObserver((mutations) => {
+                mutations.forEach((mutation) => {
+                    if (mutation.attributeName === 'data-theme' && window.vantaEffect) {
+                        const darkNow = document.documentElement.getAttribute('data-theme') === 'dark';
+                        window.vantaEffect.setOptions({
+                            backgroundColor: darkNow ? darkBg : lightBg
+                        });
+                    }
+                });
             });
-        });
-        // ⚡ Bolt Optimization: Added attributeFilter to prevent the observer from firing
-        // repeatedly on irrelevant attribute changes (e.g., class changes during View Transitions).
-        themeObserver.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+            // ⚡ Bolt Optimization: Added attributeFilter to prevent the observer from firing
+            // repeatedly on irrelevant attribute changes (e.g., class changes during View Transitions).
+            window.themeObserver.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+        }
     };
 
     const initScrollReveal = () => {
         const reveals = document.querySelectorAll('.reveal');
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if(entry.isIntersecting) {
-                    entry.target.classList.add('active');
-                    // ⚡ Bolt Optimization: Stop observing elements once they are revealed.
-                    // This prevents the IntersectionObserver from wasting CPU cycles evaluating
-                    // intersection state on scroll for elements that have already been animated.
-                    observer.unobserve(entry.target);
-                }
-            });
-        }, { threshold: 0.1 });
 
-        reveals.forEach(reveal => observer.observe(reveal));
+        // ⚡ Bolt Optimization: Use a singleton IntersectionObserver to prevent memory leaks
+        // and reduce CPU usage when navigating between pages with View Transitions.
+        if (!window.scrollRevealObserver) {
+            window.scrollRevealObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if(entry.isIntersecting) {
+                        entry.target.classList.add('active');
+                        // ⚡ Bolt Optimization: Stop observing elements once they are revealed.
+                        // This prevents the IntersectionObserver from wasting CPU cycles evaluating
+                        // intersection state on scroll for elements that have already been animated.
+                        window.scrollRevealObserver.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.1 });
+        }
+
+        reveals.forEach(reveal => window.scrollRevealObserver.observe(reveal));
     };
 
     const loadScript = (src) => {
