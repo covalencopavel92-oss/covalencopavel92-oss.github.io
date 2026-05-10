@@ -449,6 +449,16 @@ const navLinks = [
                     searchResults.style.display = 'none';
                 }
             });
+
+            // Allow users to clear search and dismiss results using the Escape key
+            searchInput.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') {
+                    searchInput.value = '';
+                    searchResults.style.display = 'none';
+                    if (searchIcon) searchIcon.style.display = 'block';
+                    if (searchSpinner) searchSpinner.style.display = 'none';
+                }
+            });
         }
 
         // --- Theme Logic ---

@@ -31,3 +31,6 @@
 ## $(date +%Y-%m-%d) - [Toggle Switch Semantics]
 **Learning:** Using a native `<input type="checkbox">` for toggle switches (like dark mode toggles) is a common pattern, but standard checkboxes are announced simply as "checkbox" by screen readers. This can be slightly confusing when the visual element looks like a switch and immediately applies a setting (unlike a form checkbox that requires submission).
 **Action:** Always add `role="switch"` to toggle checkboxes (like the theme switcher) to ensure assistive technologies correctly announce them as switches, aligning the semantic meaning with the visual presentation and functionality.
+## $(date +%Y-%m-%d) - [Search Input Keyboard Accessibility]
+**Learning:** Adding an "Escape" key event listener to search inputs is a common and expected UX pattern. It allows keyboard users to quickly clear their input and dismiss search results without needing to click outside or manually delete the text, improving accessibility and navigation flow.
+**Action:** When implementing custom search components, always add a `keydown` event listener to handle the "Escape" key, ensuring it clears the input value and resets the related UI states (e.g., hiding results, restoring icons).
