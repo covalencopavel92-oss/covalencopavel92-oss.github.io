@@ -180,6 +180,11 @@ const metaDesc = description || t("home.desc").substring(0, 160);
         }
     };
 
+    // ⚡ Bolt Optimization: Reuse IntersectionObserver to prevent memory leaks and reduce CPU usage.
+    // Instead of instantiating a new observer on every astro:page-load navigation,
+    // we instantiate it once in module scope and reuse it across navigations.
+    let scrollRevealObserver = null;
+
     const initScrollReveal = () => {
         const reveals = document.querySelectorAll('.reveal');
 

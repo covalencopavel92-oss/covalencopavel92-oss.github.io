@@ -47,3 +47,10 @@
 ## 2024-05-24 - [Optimize DOM Insertions with DocumentFragment]
 **Learning:** Directly appending multiple dynamically created DOM elements inside a loop causes multiple reflows and repaints in the browser rendering engine, which can negatively impact performance and cause layout thrashing.
 **Action:** When creating and appending multiple elements in vanilla JavaScript, always batch the operations by appending them to a `DocumentFragment` first. After the loop, append the entire fragment to the live DOM in a single operation to minimize reflow overhead.
+
+## 2026-05-18 - [Optimize IntersectionObserver instantiation in View Transitions]
+**Learning:** In Astro projects using View Transitions, creating a new  inside an  event listener creates a new observer on every navigation. These observers are not garbage collected between navigations, leading to memory leaks and redundant CPU usage as multiple observers evaluate the same intersection states.
+**Action:** Always instantiate  instances globally (e.g., at module scope) outside of the  listener, and reuse the single instance to observe new elements across navigations.
+## 2026-05-18 - [Optimize IntersectionObserver instantiation in View Transitions]
+**Learning:** In Astro projects using View Transitions, creating a new IntersectionObserver inside an astro:page-load event listener creates a new observer on every navigation. These observers are not garbage collected between navigations, leading to memory leaks and redundant CPU usage as multiple observers evaluate the same intersection states.
+**Action:** Always instantiate IntersectionObserver instances globally (e.g., at module scope) outside of the astro:page-load listener, and reuse the single instance to observe new elements across navigations.

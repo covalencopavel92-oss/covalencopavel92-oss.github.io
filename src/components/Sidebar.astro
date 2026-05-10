@@ -356,7 +356,7 @@ const navLinks = [
                         }
                     }
                 } catch (e) {
-                    console.warn('Failed to fetch page for search index:', item.url);
+                    console.warn('Failed to fetch page for search index:', item.url, e);
                 }
             });
 
