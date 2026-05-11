@@ -54,3 +54,6 @@
 ## 2026-05-18 - [Optimize IntersectionObserver instantiation in View Transitions]
 **Learning:** In Astro projects using View Transitions, creating a new IntersectionObserver inside an astro:page-load event listener creates a new observer on every navigation. These observers are not garbage collected between navigations, leading to memory leaks and redundant CPU usage as multiple observers evaluate the same intersection states.
 **Action:** Always instantiate IntersectionObserver instances globally (e.g., at module scope) outside of the astro:page-load listener, and reuse the single instance to observe new elements across navigations.
+## 2026-05-18 - [Avoid Micro-optimizations for non-critical paths]
+**Learning:** Replaced a simple `.split('/').filter(...)` with a manual `while` loop using `indexOf` and `substring` in an Astro component (`src/components/Breadcrumbs.astro`). This degraded code readability substantially for essentially zero performance gain because this script executes once on the server per navigation and processes very short strings.
+**Action:** Do not sacrifice readability for micro-optimizations on paths that aren't hot or called thousands of times. Stick to idiomatic code unless a measurable bottleneck is present.
