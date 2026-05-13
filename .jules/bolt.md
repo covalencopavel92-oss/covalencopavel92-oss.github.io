@@ -54,3 +54,7 @@
 ## 2026-05-18 - [Optimize IntersectionObserver instantiation in View Transitions]
 **Learning:** In Astro projects using View Transitions, creating a new IntersectionObserver inside an astro:page-load event listener creates a new observer on every navigation. These observers are not garbage collected between navigations, leading to memory leaks and redundant CPU usage as multiple observers evaluate the same intersection states.
 **Action:** Always instantiate IntersectionObserver instances globally (e.g., at module scope) outside of the astro:page-load listener, and reuse the single instance to observe new elements across navigations.
+
+## 2026-05-13 - [Optimize DOMParser in background search index]
+**Learning:** Parsing large HTML strings sequentially using `DOMParser` inside a background fetch loop (e.g., using `Promise.allSettled`) blocks the main thread because `DOMParser.parseFromString` runs synchronously. This results in high Total Blocking Time (TBT) and degraded Interaction to Next Paint (INP) during operations like populating a search index.
+**Action:** When performing heavy sequential background processing on the client (such as parsing HTML for indexing), always insert an await statement (e.g., `await new Promise(resolve => 'requestIdleCallback' in window ? requestIdleCallback(resolve) : setTimeout(resolve, 0))`) right before the blocking operation to yield execution back to the browser. This allows it to handle critical tasks like rendering and user inputs before resuming background work.
