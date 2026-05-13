@@ -9,3 +9,6 @@
 ## 2024-05-10 - Async Form Submission Loading States
 **Learning:** Replacing the `innerText` of a submit button (e.g., changing "Send" to "Sending...") during an async operation breaks internationalization (as the hardcoded string ignores translation keys) and can cause layout jitter if the new text has a different width.
 **Action:** Provide immediate visual feedback for async form submissions by adding an inline loading indicator (like an SVG spinner) directly into the submit button alongside the text. Disable the button while the request processes, but do not replace the button's text content. Ensure form event listeners in Astro are wrapped inside `document.addEventListener('astro:page-load', () => { ... })` to persist across View Transitions.
+## 2024-05-13 - Search Input Escape Key UX
+**Learning:** Implementing keyboard shortcuts like pressing the 'Escape' key to clear an active search input, close dropdowns, and remove focus significantly improves keyboard navigation accessibility and provides a more intuitive way out for all users.
+**Action:** When implementing custom search components, always add a `keydown` event listener to handle the 'Escape' key. Ensure it clears the input value, resets related UI states (e.g., hiding results, restoring icons), and removes focus (`blur()`).
