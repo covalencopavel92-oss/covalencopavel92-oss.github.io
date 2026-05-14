@@ -444,6 +444,16 @@ const navLinks = [
                 }, 300) as unknown as number;
             });
 
+            searchInput.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') {
+                    searchInput.value = '';
+                    searchResults.style.display = 'none';
+                    searchResults.textContent = '';
+                    if (searchIcon) searchIcon.style.display = 'block';
+                    if (searchSpinner) searchSpinner.style.display = 'none';
+                }
+            });
+
             document.addEventListener('click', (e) => {
                 if (!searchInput.contains(e.target as Node) && !searchResults.contains(e.target as Node)) {
                     searchResults.style.display = 'none';
