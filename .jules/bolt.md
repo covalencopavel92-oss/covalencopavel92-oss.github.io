@@ -54,3 +54,6 @@
 ## 2026-05-18 - [Optimize IntersectionObserver instantiation in View Transitions]
 **Learning:** In Astro projects using View Transitions, creating a new IntersectionObserver inside an astro:page-load event listener creates a new observer on every navigation. These observers are not garbage collected between navigations, leading to memory leaks and redundant CPU usage as multiple observers evaluate the same intersection states.
 **Action:** Always instantiate IntersectionObserver instances globally (e.g., at module scope) outside of the astro:page-load listener, and reuse the single instance to observe new elements across navigations.
+## 2024-05-14 - [Optimize DOMParser for large HTML strings]
+**Learning:** Using `DOMParser` to synchronously parse large or heavy HTML strings sequentially in the client during a background loop (e.g., search indexing) can cause Total Blocking Time (TBT) spikes, reducing responsiveness and negatively impacting Interaction to Next Paint (INP).
+**Action:** When performing heavy string parsing operations in client-side loops, explicitly yield back to the main thread before parsing by awaiting a `requestIdleCallback` (or `setTimeout(0)` as fallback). This allows the browser to process high-priority tasks, like user input, between parsing cycles.
