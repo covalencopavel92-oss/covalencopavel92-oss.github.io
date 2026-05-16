@@ -444,6 +444,18 @@ const navLinks = [
                 }, 300) as unknown as number;
             });
 
+            searchInput.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') {
+                    e.preventDefault();
+                    clearTimeout(debounceTimer);
+                    searchInput.value = '';
+                    if (searchResults) searchResults.style.display = 'none';
+                    if (searchIcon) searchIcon.style.display = 'block';
+                    if (searchSpinner) searchSpinner.style.display = 'none';
+                    searchInput.blur();
+                }
+            });
+
             document.addEventListener('click', (e) => {
                 if (!searchInput.contains(e.target as Node) && !searchResults.contains(e.target as Node)) {
                     searchResults.style.display = 'none';
