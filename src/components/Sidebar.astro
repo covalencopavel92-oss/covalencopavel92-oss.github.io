@@ -346,6 +346,12 @@ const navLinks = [
                     const response = await fetch(item.url);
                     if (response.ok) {
                         const html = await response.text();
+
+                        // ⚡ Bolt Optimization: Yield to main thread before parsing heavy HTML strings
+                        // This prevents Total Blocking Time (TBT) spikes and improves Interaction to Next Paint (INP)
+                        // by allowing the browser to handle user input between parsing iterations.
+                        await new Promise(resolve => typeof window !== 'undefined' && 'requestIdleCallback' in window ? requestIdleCallback(resolve) : setTimeout(resolve, 0));
+
                         const doc = parser.parseFromString(html, 'text/html');
 
                         // Extract text from main-content only, to avoid indexing the sidebar itself
