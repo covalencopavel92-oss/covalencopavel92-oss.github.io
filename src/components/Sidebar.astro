@@ -380,6 +380,17 @@ const navLinks = [
             }
             searchInput.addEventListener('focus', populateSearchIndex, { once: true });
 
+            searchInput.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') {
+                    e.preventDefault();
+                    searchInput.value = '';
+                    if (searchIcon) searchIcon.style.display = 'block';
+                    if (searchSpinner) searchSpinner.style.display = 'none';
+                    searchResults.textContent = '';
+                    searchResults.style.display = 'none';
+                }
+            });
+
             searchInput.addEventListener('input', (e) => {
                 // Also trigger population here just in case they typed without focusing/hovering somehow
                 populateSearchIndex();
